@@ -100,11 +100,26 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Safe area insets for notched phones */
+@supports (padding: env(safe-area-inset-top)) {
+  .safe-area-pt { padding-top: env(safe-area-inset-top); }
+  .safe-area-pb { padding-bottom: env(safe-area-inset-bottom); }
+  .safe-area-pl { padding-left: env(safe-area-inset-left); }
+  .safe-area-pr { padding-right: env(safe-area-inset-right); }
+}
+
 body {
   margin: 0;
   background: var(--bg-base);
   color: var(--text-primary);
   line-height: 1.6;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+/* Better touch targets */
+button, a, .topic-item, .step-item {
+  touch-action: manipulation;
 }
 
 /* ─── Scrollbar ─── */
@@ -126,9 +141,11 @@ body {
   left: 0;
   width: var(--sidebar-w);
   height: calc(100vh - var(--header-h));
+  height: calc(100dvh - var(--header-h));
   background: var(--bg-sidebar);
   border-right: 1px solid var(--border);
   overflow-y: auto;
+  overscroll-behavior: contain;
   z-index: 40;
   transition: transform var(--transition);
 }
@@ -139,6 +156,8 @@ body {
 
 @media (max-width: 768px) {
   .sidebar {
+    width: 85vw;
+    max-width: 320px;
     transform: translateX(-100%);
   }
   .sidebar.open {
@@ -160,6 +179,12 @@ body {
   line-height: 1.4;
   text-decoration: none;
   user-select: none;
+}
+
+@media (max-width: 640px) {
+  .topic-item {
+    padding: 12px 14px;
+  }
 }
 
 .topic-item:hover {
@@ -245,6 +270,12 @@ body {
   transition: background var(--transition), border-color var(--transition);
 }
 
+@media (max-width: 640px) {
+  .card {
+    padding: 16px;
+  }
+}
+
 .card-header {
   font-size: 1rem;
   font-weight: 600;
@@ -307,8 +338,15 @@ pre[class*="language-"] {
 .token.punctuation { color: var(--text-secondary) !important; }
 
 /* ─── Interactives ─── */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
 .demo-table {
   width: 100%;
+  min-width: 0;
   border-collapse: collapse;
   font-size: 0.8125rem;
   font-family: var(--font-mono);
@@ -330,6 +368,16 @@ pre[class*="language-"] {
   padding: 8px 12px;
   border-bottom: 1px solid var(--border);
   color: var(--text-primary);
+  word-break: break-word;
+  max-width: 200px;
+}
+
+@media (max-width: 640px) {
+  .demo-table td,
+  .demo-table th {
+    padding: 6px 8px;
+    font-size: 0.75rem;
+  }
 }
 
 .demo-table tr:hover td {
@@ -492,6 +540,13 @@ pre[class*="language-"] {
   background: var(--bg-hover);
   color: var(--text-primary);
   border-color: var(--text-tertiary);
+}
+
+@media (max-width: 640px) {
+  .theme-btn {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 /* ─── Utility ─── */
