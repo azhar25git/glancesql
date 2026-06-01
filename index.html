@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlanceSQL — Interactive SQL Learning</title>
+  <meta name="description" content="Learn SQL interactively with visual explanations" />
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], mono: ['JetBrains Mono', 'Fira Code', 'monospace'] },
+          colors: { surface: 'var(--bg-surface)', sidebar: 'var(--bg-sidebar)' }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Prism.js (must load core before component) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+
+  <!-- Register Alpine component BEFORE Alpine loads (synchronous, catches alpine:init) -->
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('glancesql', () => window.__gsComponent())
+    })
+  </script>
+
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+</head>
+<body x-data="glancesql" x-on:keydown="onKeydown" tabindex="0"
+      class="h-screen bg-[var(--bg-base)] text-[var(--text-primary)] font-sans antialiased overflow-hidden">
+
+  <!-- ════════════ HEADER ════════════ -->
+  <header class="fixed top-0 left-0 right-0 h-14 z-50 flex items-center justify-between px-4
+                 bg-[var(--bg-surface)]/80 backdrop-blur-md border-b border-[var(--border)]"
+          style="height:var(--header-h)">
+
+    <div class="flex items-center gap-3">
+      <!-- Hamburger (mobile) -->
+      <button @click="toggleSidebar()"
+              class="lg:hidden flex-center w-9 h-9 rounded-lg border border-[var(--border)]
+                     bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]
+                     transition cursor-pointer"
+              aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path x-show="!sidebarOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16" />
+          <path x-show="sidebarOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Logo -->
+      <a href="#" @click.prevent="currentId=null; search=''; location.hash=''"
+         class="flex items-center gap-2 text-lg font-bold tracking-tight no-underline text-[var(--text-primary)]">
+        <span class="text-[var(--accent)] text-xl">⌘</span>
+        <span>Glance<span class="text-[var(--accent)]">SQL</span></span>
+      </a>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Progress -->
+      <template x-if="current">
+        <span class="flex items-center gap-1.5 text-xs text-[var(--text-tertiary)]">
+          <span class="w-20 h-1.5 bg-[var(--bg-hover)] rounded-full overflow-hidden">
+            <span class="block h-full bg-[var(--green)] rounded-full transition-all duration-300"
+                  :style="'width:'+progress+'%'"></span>
+          </span>
+          <span x-text="progress+'%'"></span>
+        </span>
+      </template>
+
+      <!-- Theme toggle -->
+      <button @click="toggleDark()" class="theme-btn cursor-pointer" aria-label="Toggle theme">
+        <span x-show="dark">☀️</span>
+        <span x-show="!dark">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ════════════ SIDEBAR OVERLAY (mobile) ════════════ -->
+  <div class="sidebar-overlay lg:hidden" :class="sidebarOpen ? 'show' : ''"
+       @click="closeSidebar()"></div>
+
+  <!-- ════════════ SIDEBAR ════════════ -->
+  <aside class="sidebar" :class="sidebarOpen ? 'open' : 'closed'">
+    <div class="flex flex-col h-full">
+      <!-- Search -->
+      <div class="p-3 border-b border-[var(--border)]">
+        <input type="text" x-model="search"
+               class="search-input"
+               placeholder="Search topics…">
+      </div>
+
+      <!-- Topic list -->
+      <nav class="flex-1 overflow-y-auto py-2 px-2" x-data>
+        <template x-for="cat in groupedTopics" :key="cat.id">
+          <div>
+            <div class="cat-header flex items-center gap-2">
+              <span x-text="cat.icon"></span>
+              <span x-text="cat.title"></span>
+              <span class="ml-auto text-[10px] opacity-50" x-text="'('+cat.topics.length+')'"></span>
+            </div>
+            <template x-for="topic in cat.topics" :key="topic.id">
+              <a href="#" @click.prevent="selectTopic(topic.id)"
+                 class="topic-item"
+                 :class="{ active: currentId === topic.id }">
+                <span class="icon" x-text="topic.i"></span>
+                <span class="flex-1 truncate" x-text="topic.t"></span>
+                <span class="check" :class="{ done: completed.has(topic.id) }"></span>
+              </a>
+            </template>
+          </div>
+        </template>
+        <template x-if="!search && groupedTopics.length === 0">
+          <div class="empty-state py-8">
+            <span class="text-2xl">🗄️</span>
+            <span class="text-sm">No topics loaded</span>
+          </div>
+        </template>
+        <template x-if="search && groupedTopics.length === 0">
+          <div class="empty-state py-8">
+            <span class="text-2xl">🔍</span>
+            <span class="text-sm">No topics match "<span x-text="search"></span>"</span>
+          </div>
+        </template>
+      </nav>
+
+      <!-- Footer stats -->
+      <div class="p-3 border-t border-[var(--border)] text-[11px] text-[var(--text-tertiary)] flex items-center justify-between">
+        <span x-text="completed.size + ' / ' + TOPICS.length + ' completed'"></span>
+        <span x-text="progress + '%'"></span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ════════════ MAIN CONTENT ════════════ -->
+        <main class="h-screen pt-14 transition-all duration-200 overflow-y-auto"
+        :class="{ 'sidebar-open': sidebarOpen }">
+
+    <!-- ─── WELCOME (no topic selected) ─── -->
+    <template x-if="!current">
+      <div class="flex flex-col items-center justify-center min-h-[calc(100vh-56px)] px-6 py-16 text-center animate-fade-in">
+        <div class="max-w-2xl">
+          <div class="text-6xl mb-6">🗄️</div>
+          <h1 class="text-3xl sm:text-4xl font-bold mb-3">
+            Welcome to <span class="text-[var(--accent)]">GlanceSQL</span>
+          </h1>
+          <p class="text-lg text-[var(--text-secondary)] mb-6 max-w-lg mx-auto leading-relaxed">
+            Learn SQL from zero to expert with <strong>interactive visuals</strong>,
+            clear explanations, and hands-on examples.
+          </p>
+          <div class="flex flex-wrap justify-center gap-3 mb-10">
+            <span class="badge badge-beginner">Beginner</span>
+            <span class="badge badge-intermediate">Intermediate</span>
+            <span class="badge badge-advanced">Advanced</span>
+            <span class="badge badge-expert">Expert</span>
+          </div>
+
+          <!-- Quick start -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl mx-auto">
+            <template x-for="(cat, i) in CATEGORIES.slice(0,3)" :key="cat.id">
+              <div @click="selectTopic(cat.id === 'core-concepts' ? 'what-is-sql' :
+                                      cat.id === 'querying-data' ? 'select' : 'insert')"
+                   class="card cursor-pointer text-center hover:border-[var(--accent-ring)] transition">
+                <div class="text-2xl mb-2" x-text="cat.icon"></div>
+                <div class="font-semibold text-sm" x-text="cat.title"></div>
+              </div>
+            </template>
+          </div>
+
+          <p class="mt-8 text-xs text-[var(--text-tertiary)]">
+            <kbd>←</kbd> <kbd>→</kbd> navigate &middot;
+            <kbd>⌘K</kbd> search &middot;
+            <span x-text="TOPICS.length"></span> topics &middot;
+            dark theme by default
+          </p>
+        </div>
+      </div>
+    </template>
+
+    <!-- ─── TOPIC VIEW ─── -->
+    <template x-if="current">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 animate-fade-in">
+
+        <!-- Topic Header -->
+        <div class="flex items-start justify-between mb-6 flex-wrap gap-3">
+          <div>
+            <div class="flex items-center gap-2 text-xs text-[var(--text-tertiary)] mb-1">
+              <span x-text="CATEGORIES.find(c => c.id === current.c)?.icon"></span>
+              <span x-text="CATEGORIES.find(c => c.id === current.c)?.title"></span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-bold flex items-center gap-3">
+              <span x-text="current.i"></span>
+              <span x-text="current.t"></span>
+            </h1>
+          </div>
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <span class="badge" :class="'badge-'+current.d" x-text="current.d"></span>
+            <button @click="markComplete(current.id)"
+                    class="flex-center w-8 h-8 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)]
+                           cursor-pointer hover:border-[var(--green)] transition"
+                    :class="completed.has(current.id) ? 'text-[var(--green)] border-[var(--green)]' : 'text-[var(--text-tertiary)]'"
+                    :title="completed.has(current.id) ? 'Mark incomplete' : 'Mark complete'">
+              <span x-text="completed.has(current.id) ? '✓' : '○'" class="text-lg"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading skeleton -->
+        <template x-if="loading">
+          <div class="space-y-4">
+            <div class="skeleton h-6 w-3/4"></div>
+            <div class="skeleton h-4 w-full"></div>
+            <div class="skeleton h-4 w-5/6"></div>
+            <div class="skeleton h-32 w-full mt-6"></div>
+          </div>
+        </template>
+
+        <!-- Sections -->
+        <template x-if="!loading">
+          <div>
+            <template x-for="(section, idx) in sections" :key="sectionKey(section, idx)">
+              <div class="section-enter mb-6">
+
+                <!-- ── explanation ── -->
+                <template x-if="section.type === 'explanation'">
+                  <div class="card">
+                    <div x-html="section.html"></div>
+                  </div>
+                </template>
+
+                <!-- ── syntax (code block) ── -->
+                <template x-if="section.type === 'syntax'">
+                  <div class="card !p-0 overflow-hidden">
+                    <div class="flex items-center justify-between px-4 py-2 bg-[var(--bg-hover)] border-b border-[var(--border)]">
+                      <span class="text-xs font-mono text-[var(--text-tertiary)]">SQL</span>
+                      <button @click="navigator.clipboard?.writeText(section.sql)"
+                              class="text-xs text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition cursor-pointer">
+                        📋 Copy
+                      </button>
+                    </div>
+                    <pre class="!m-0 !rounded-none !bg-[#0d1117]"><code class="language-sql" x-text="section.sql"></code></pre>
+                  </div>
+                </template>
+
+                <!-- ── example with steps ── -->
+                <template x-if="section.type === 'example' && section.steps">
+                  <div class="card">
+                    <div class="card-header" x-text="section.title || 'Walkthrough'"></div>
+                    <div class="step-list">
+                      <template x-for="(step, si) in section.steps" :key="si">
+                        <div class="step-item" :class="{ active: stepIndex === si }"
+                             @click="stepIndex = si" style="cursor:pointer">
+                          <div class="step-number" x-text="si+1"></div>
+                          <div>
+                            <p class="text-sm" x-text="step.text"></p>
+                            <p x-show="stepIndex === si" class="text-xs text-[var(--accent)] mt-1">← active step</p>
+                          </div>
+                        </div>
+                      </template>
+                    </div>
+                    <div x-show="section.steps.length > 1" class="flex items-center gap-2 mt-4 pt-3 border-t border-[var(--border)]">
+                      <button @click="stepIndex = Math.max(0, stepIndex-1)"
+                              class="px-3 py-1.5 text-xs rounded bg-[var(--bg-hover)] hover:bg-[var(--accent-soft)]
+                                     text-[var(--text-secondary)] transition cursor-pointer"
+                              :disabled="stepIndex === 0">← Prev</button>
+                      <span class="text-xs text-[var(--text-tertiary)]" x-text="'Step '+(stepIndex+1)+'/'+section.steps.length"></span>
+                      <button @click="stepIndex = Math.min(section.steps.length-1, stepIndex+1)"
+                              class="px-3 py-1.5 text-xs rounded bg-[var(--bg-hover)] hover:bg-[var(--accent-soft)]
+                                     text-[var(--text-secondary)] transition cursor-pointer"
+                              :disabled="stepIndex === section.steps.length-1">Next →</button>
+                    </div>
+                  </div>
+                </template>
+
+                <!-- ── example with data table ── -->
+                <template x-if="section.type === 'example' && section.data">
+                  <div class="card">
+                    <div class="card-header">🗃️ Example</div>
+                    <div class="overflow-x-auto rounded border border-[var(--border)]">
+                      <table class="demo-table">
+                        <thead>
+                          <tr>
+                            <template x-for="(_, key) in section.data[0]" :key="key">
+                              <th x-text="key" class="whitespace-nowrap"></th>
+                            </template>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <template x-for="(row, ri) in section.data" :key="ri">
+                            <tr>
+                              <template x-for="(val, key) in row" :key="key">
+                                <td x-text="val" class="whitespace-nowrap"></td>
+                              </template>
+                            </tr>
+                          </template>
+                        </tbody>
+                      </table>
+                    </div>
+                    <template x-if="section.sql">
+                      <div class="mt-3">
+                        <pre class="code-block !mb-0"><code class="language-sql" x-text="section.sql"></code></pre>
+                      </div>
+                    </template>
+                    <template x-if="section.result">
+                      <div class="mt-3">
+                        <div class="text-xs font-semibold text-[var(--text-secondary)] mb-2">Result:</div>
+                        <table class="demo-table">
+                          <thead>
+                            <tr>
+                              <template x-for="(_, key) in section.result[0]" :key="key">
+                                <th x-text="key" class="whitespace-nowrap"></th>
+                              </template>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <template x-for="(row, ri) in section.result" :key="ri">
+                              <tr>
+                                <template x-for="(val, key) in row" :key="key">
+                                  <td x-text="val" class="whitespace-nowrap"></td>
+                                </template>
+                              </tr>
+                            </template>
+                          </tbody>
+                        </table>
+                      </div>
+                    </template>
+                  </div>
+                </template>
+
+                <!-- ── visual-filter-table ── -->
+                <template x-if="section.type === 'visual-filter-table'">
+                  <div class="card text-center">
+                    <div class="card-header">🔍 Visual: Filtering Rows</div>
+                    <div class="overflow-x-auto rounded border border-[var(--border)]">
+                      <table class="demo-table">
+                        <thead>
+                          <tr><th>id</th><th>name</th><th>dept</th><th>salary</th><th>city</th></tr>
+                        </thead>
+                        <tbody>
+                          <template x-for="(row, ri) in getDataset('employees')" :key="ri">
+                            <tr :class="{ dim: ri > 0 && ri < 3 }">
+                              <td x-text="row.id"></td>
+                              <td x-text="row.name"></td>
+                              <td x-text="row.dept"></td>
+                              <td x-text="'$'+row.salary.toLocaleString()"></td>
+                              <td x-text="row.city"></td>
+                            </tr>
+                          </template>
+                        </tbody>
+                      </table>
+                    </div>
+                    <p class="text-xs text-[var(--text-tertiary)] mt-3">Dimmed rows represent data filtered out by WHERE. Only matching rows remain.</p>
+                  </div>
+                </template>
+
+                <!-- ── visual-venn (JOIN diagrams) ── -->
+                <template x-if="section.type === 'visual-venn'">
+                  <div class="card flex flex-col items-center">
+                    <div class="card-header self-start">🔗 Visual: <span x-text="section.joinType.toUpperCase()"></span> JOIN</div>
+                    <div class="flex items-center justify-center gap-6 sm:gap-10 py-4 flex-wrap">
+                      <!-- Left circle -->
+                      <div class="flex flex-col items-center">
+                        <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[var(--accent-soft)] border-2 border-[var(--accent)]
+                                    flex items-center justify-center text-sm font-semibold text-[var(--accent)]">
+                          A
+                        </div>
+                        <span class="text-xs text-[var(--text-secondary)] mt-2">Users</span>
+                      </div>
+                      <!-- Intersection (highlighted for INNER) -->
+                      <div class="flex flex-col items-center"
+                           x-show="section.joinType === 'inner' || section.joinType === 'left' || section.joinType === 'right' || section.joinType === 'full'">
+                        <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[var(--green-soft)] border-2 border-[var(--green)]
+                                    flex items-center justify-center text-sm font-semibold text-[var(--green)]"
+                             :class="{ 'scale-110': section.joinType === 'inner' }">
+                          A∩B
+                        </div>
+                        <span class="text-xs text-[var(--text-secondary)] mt-2">Matches</span>
+                      </div>
+                      <!-- Right circle -->
+                      <div class="flex flex-col items-center">
+                        <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[var(--green-soft)] border-2 border-[var(--green)]
+                                    flex items-center justify-center text-sm font-semibold text-[var(--green)]">
+                          B
+                        </div>
+                        <span class="text-xs text-[var(--text-secondary)] mt-2">Orders</span>
+                      </div>
+                    </div>
+                    <p class="text-xs text-[var(--text-tertiary)]">
+                      <span x-text="section.joinType === 'inner' ? 'Only matched rows (A∩B)' :
+                                    section.joinType === 'left' ? 'All A + matched B' :
+                                    section.joinType === 'right' ? 'All B + matched A' :
+                                    'All rows from both tables'"></span>
+                    </p>
+                  </div>
+                </template>
+
+                <!-- ── visual-sql-flow ── -->
+                <template x-if="section.type === 'visual-sql-flow'">
+                  <div class="card text-center">
+                    <div class="card-header">🔄 Query Execution Flow</div>
+                    <div class="flex items-center justify-center gap-2 sm:gap-4 flex-wrap py-4">
+                      <div class="px-4 py-2 rounded bg-[var(--accent-soft)] text-xs font-mono text-[var(--accent)] border border-[var(--border-accent)]">FROM</div>
+                      <span class="text-[var(--text-tertiary)]">→</span>
+                      <div class="px-4 py-2 rounded bg-[var(--accent-soft)] text-xs font-mono text-[var(--accent)] border border-[var(--border-accent)]">WHERE</div>
+                      <span class="text-[var(--text-tertiary)]">→</span>
+                      <div class="px-4 py-2 rounded bg-[var(--accent-soft)] text-xs font-mono text-[var(--accent)] border border-[var(--border-accent)]">SELECT</div>
+                      <span class="text-[var(--text-tertiary)]">→</span>
+                      <div class="px-4 py-2 rounded bg-[var(--accent-soft)] text-xs font-mono text-[var(--accent)] border border-[var(--border-accent)]">ORDER BY</div>
+                    </div>
+                    <p class="text-xs text-[var(--text-tertiary)]">SQL executes logical steps in this order</p>
+                  </div>
+                </template>
+
+                <!-- ── visual-aggregate ── -->
+                <template x-if="section.type === 'visual-aggregate'">
+                  <div class="card text-center">
+                    <div class="card-header">📊 Visual: GROUP BY Aggregation</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 py-2">
+                      <div>
+                        <div class="text-xs font-semibold text-[var(--text-secondary)] mb-2">Before (raw data)</div>
+                        <table class="demo-table">
+                          <thead><tr><th>dept</th><th>salary</th></tr></thead>
+                          <tbody>
+                            <tr><td>Engineering</td><td>$95,000</td></tr>
+                            <tr><td>Sales</td><td>$72,000</td></tr>
+                            <tr><td>Engineering</td><td>$110,000</td></tr>
+                            <tr><td>Marketing</td><td>$68,000</td></tr>
+                            <tr><td>Sales</td><td>$85,000</td></tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <div class="text-xs font-semibold text-[var(--text-secondary)] mb-2">After (GROUP BY)</div>
+                        <table class="demo-table">
+                          <thead><tr><th>dept</th><th>avg_salary</th><th>count</th></tr></thead>
+                          <tbody>
+                            <tr class="highlight"><td>Engineering</td><td>$102,500</td><td>2</td></tr>
+                            <tr><td>Marketing</td><td>$68,000</td><td>1</td></tr>
+                            <tr><td>Sales</td><td>$78,500</td><td>2</td></tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <p class="text-xs text-[var(--text-tertiary)] mt-3">GROUP BY collapses rows with same department into summary rows</p>
+                  </div>
+                </template>
+
+                <!-- ── Default fallback ── -->
+                <template x-if="!['explanation','syntax','example','visual-filter-table','visual-venn','visual-sql-flow','visual-aggregate'].includes(section.type)">
+                  <div class="card">
+                    <div class="text-sm text-[var(--text-secondary)]" x-text="'Section: '+section.type"></div>
+                  </div>
+                </template>
+
+              </div>
+            </template>
+
+            <!-- Prev / Next Navigation -->
+            <div class="flex items-center justify-between mt-8 pt-6 border-t border-[var(--border)]">
+              <template x-if="prevTopic">
+                <a href="#" @click.prevent="goPrev()"
+                   class="flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition no-underline">
+                  <span>←</span>
+                  <div class="text-left">
+                    <div class="text-xs text-[var(--text-tertiary)]">Previous</div>
+                    <div class="font-medium" x-text="prevTopic.t"></div>
+                  </div>
+                </a>
+              </template>
+              <div x-show="!prevTopic"></div>
+              <template x-if="nextTopic">
+                <a href="#" @click.prevent="goNext()"
+                   class="flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent)] transition no-underline text-right">
+                  <div>
+                    <div class="text-xs text-[var(--text-tertiary)]">Next</div>
+                    <div class="font-medium" x-text="nextTopic.t"></div>
+                  </div>
+                  <span>→</span>
+                </a>
+              </template>
+            </div>
+
+          </div>
+        </template>
+
+      </div>
+    </template>
+
+  </main>
+
+  <!-- Main JS (synchronous — must run before Alpine's microtask processes x-data) -->
+  <script src="main.js"></script>
+</body>
+</html>
