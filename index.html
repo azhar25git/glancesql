@@ -1,11 +1,239 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" dir="ltr" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GlanceSQL — Interactive SQL Learning</title>
+  <title>GlanceSQL by MiniSoft BD — Interactive SQL Learning</title>
   <meta name="description" content="Learn SQL interactively with visual explanations" />
-  <link rel="icon" type="image/x-icon" href="azhar.ico" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://glancesql.minisoft.bd/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://glancesql.minisoft.bd/" />
+  <meta property="og:title" content="GlanceSQL — Interactive SQL Learning" />
+  <meta property="og:description" content="Master SQL in One Glance — 131 topics, zero setup, one page. Learn SQL interactively with visual explanations, analogies, and runnable examples." />
+  <meta property="og:image" content="https://glancesql.minisoft.bd/og-image.png" />
+  <meta property="og:site_name" content="GlanceSQL" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="GlanceSQL — Interactive SQL Learning" />
+  <meta name="twitter:description" content="Master SQL in One Glance — 131 topics, zero setup, one page. Learn SQL interactively with visual explanations, analogies, and runnable examples." />
+  <meta name="twitter:image" content="https://glancesql.minisoft.bd/og-image.png" />
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "GlanceSQL",
+        "url": "https://glancesql.minisoft.bd/",
+        "description": "Master SQL in One Glance — 131 topics, zero setup, one page. Interactive SQL learning with visual explanations, analogies, and runnable examples.",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "All",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      },
+      {
+        "@type": "Course",
+        "name": "Interactive SQL Course",
+        "description": "Learn SQL from zero to expert with 131 interactive topics across 18 categories, from basic SELECT statements to advanced topics like transactions, query optimization, and database design.",
+        "provider": {
+          "@type": "Organization",
+          "name": "GlanceSQL"
+        },
+        "hasCourseInstance": {
+          "@type": "CourseInstance",
+          "courseMode": "ONLINE",
+          "courseWorkload": "PT10H",
+          "teaches": [
+            "What is SQL?", "What is a Database?", "Relational DB Concepts", "Data Types",
+            "SQL Syntax & Structure", "Comments", "SELECT Statement", "SELECT DISTINCT",
+            "FROM Clause", "Column & Table Aliases", "WHERE Clause", "Comparison Operators",
+            "AND, OR, NOT", "ORDER BY", "LIMIT & OFFSET", "NULL Values",
+            "IS NULL / IS NOT NULL", "LIKE Operator", "SQL Wildcards", "IN Operator",
+            "BETWEEN Operator", "CASE Expression", "INSERT INTO", "UPDATE Statement",
+            "DELETE Statement", "TRUNCATE TABLE", "COUNT()", "SUM() & AVG()",
+            "MIN() & MAX()", "UPPER() & LOWER()", "LENGTH()", "TRIM Functions",
+            "SUBSTRING()", "REPLACE()", "CONCAT()", "COALESCE()", "NULLIF()",
+            "CAST() & CONVERT()", "ROUND(), CEIL(), FLOOR()", "ABS()", "Date & Time Functions",
+            "GROUP BY", "HAVING Clause", "GROUPING SETS", "ROLLUP", "CUBE",
+            "INNER JOIN", "LEFT JOIN", "RIGHT JOIN", "FULL OUTER JOIN", "CROSS JOIN",
+            "NATURAL JOIN", "Self-Join", "Non-Equi Joins", "UNION & UNION ALL",
+            "INTERSECT", "EXCEPT / MINUS", "Scalar Subquery", "Row Subquery",
+            "Table Subquery (Derived)", "Correlated Subquery", "EXISTS / NOT EXISTS", "ANY / ALL",
+            "CREATE TABLE", "ALTER TABLE", "DROP TABLE", "NOT NULL Constraint",
+            "UNIQUE Constraint", "PRIMARY KEY", "FOREIGN KEY", "CHECK Constraint",
+            "DEFAULT Constraint", "CREATE / DROP INDEX", "CREATE / DROP VIEW",
+            "Sequences & Auto-Increment", "Temporary Tables", "Common Table Expressions (CTE)",
+            "Recursive CTE", "ROW_NUMBER(), RANK()", "LEAD() & LAG()", "Window Frame Clauses",
+            "FIRST_VALUE / LAST_VALUE", "PIVOT / UNPIVOT", "MERGE / UPSERT", "LATERAL / APPLY",
+            "STRING_AGG / LISTAGG", "JSON in SQL", "Full-Text Search", "Spatial Data & GIS",
+            "Gaps & Islands Problems", "Running Totals & Moving Avg",
+            "BEGIN, COMMIT, ROLLBACK", "SAVEPOINT", "Transaction Isolation Levels",
+            "LOCK TABLE", "Deadlocks", "Stored Procedures", "User-Defined Functions",
+            "Triggers", "Cursors", "Dynamic SQL", "EXPLAIN / Execution Plans",
+            "Query Optimization", "Indexing Strategies", "Index Maintenance",
+            "Table Partitioning", "Query Hints", "Cost-Based vs Rule-Based",
+            "1NF — First Normal Form", "2NF — Second Normal Form", "3NF — Third Normal Form",
+            "BCNF — Boyce-Codd", "Denormalization", "Entity-Relationship Modeling",
+            "Referential Integrity", "Database Sharding", "Replication", "ACID vs BASE",
+            "CAP Theorem", "MySQL Features", "PostgreSQL Features", "SQL Server Features",
+            "SQLite Features", "Oracle Features", "ANSI SQL Standards History",
+            "SQL Injection Prevention", "N+1 Query Problem", "Cartesian Explosions",
+            "Halloween Problem", "Implicit vs Explicit Joins", "Index Bloat & Maintenance"
+          ]
+        }
+      },
+      {
+        "@type": "ItemList",
+        "name": "SQL Topics",
+        "itemListElement": [
+          {"@type":"ListItem","position":1,"name":"What is SQL?","url":"https://glancesql.minisoft.bd/#what-is-sql"},
+          {"@type":"ListItem","position":2,"name":"What is a Database?","url":"https://glancesql.minisoft.bd/#what-is-database"},
+          {"@type":"ListItem","position":3,"name":"Relational DB Concepts","url":"https://glancesql.minisoft.bd/#relational-concepts"},
+          {"@type":"ListItem","position":4,"name":"Data Types","url":"https://glancesql.minisoft.bd/#data-types"},
+          {"@type":"ListItem","position":5,"name":"SQL Syntax & Structure","url":"https://glancesql.minisoft.bd/#sql-syntax"},
+          {"@type":"ListItem","position":6,"name":"Comments","url":"https://glancesql.minisoft.bd/#comments"},
+          {"@type":"ListItem","position":7,"name":"SELECT Statement","url":"https://glancesql.minisoft.bd/#select"},
+          {"@type":"ListItem","position":8,"name":"SELECT DISTINCT","url":"https://glancesql.minisoft.bd/#select-distinct"},
+          {"@type":"ListItem","position":9,"name":"FROM Clause","url":"https://glancesql.minisoft.bd/#from-clause"},
+          {"@type":"ListItem","position":10,"name":"Column & Table Aliases","url":"https://glancesql.minisoft.bd/#as-alias"},
+          {"@type":"ListItem","position":11,"name":"WHERE Clause","url":"https://glancesql.minisoft.bd/#where"},
+          {"@type":"ListItem","position":12,"name":"Comparison Operators","url":"https://glancesql.minisoft.bd/#comparison-ops"},
+          {"@type":"ListItem","position":13,"name":"AND, OR, NOT","url":"https://glancesql.minisoft.bd/#and-or-not"},
+          {"@type":"ListItem","position":14,"name":"ORDER BY","url":"https://glancesql.minisoft.bd/#order-by"},
+          {"@type":"ListItem","position":15,"name":"LIMIT & OFFSET","url":"https://glancesql.minisoft.bd/#limit-offset"},
+          {"@type":"ListItem","position":16,"name":"NULL Values","url":"https://glancesql.minisoft.bd/#null-values"},
+          {"@type":"ListItem","position":17,"name":"IS NULL / IS NOT NULL","url":"https://glancesql.minisoft.bd/#is-null"},
+          {"@type":"ListItem","position":18,"name":"LIKE Operator","url":"https://glancesql.minisoft.bd/#like"},
+          {"@type":"ListItem","position":19,"name":"SQL Wildcards","url":"https://glancesql.minisoft.bd/#wildcards"},
+          {"@type":"ListItem","position":20,"name":"IN Operator","url":"https://glancesql.minisoft.bd/#in-operator"},
+          {"@type":"ListItem","position":21,"name":"BETWEEN Operator","url":"https://glancesql.minisoft.bd/#between"},
+          {"@type":"ListItem","position":22,"name":"CASE Expression","url":"https://glancesql.minisoft.bd/#case-expression"},
+          {"@type":"ListItem","position":23,"name":"INSERT INTO","url":"https://glancesql.minisoft.bd/#insert"},
+          {"@type":"ListItem","position":24,"name":"UPDATE Statement","url":"https://glancesql.minisoft.bd/#update"},
+          {"@type":"ListItem","position":25,"name":"DELETE Statement","url":"https://glancesql.minisoft.bd/#delete"},
+          {"@type":"ListItem","position":26,"name":"TRUNCATE TABLE","url":"https://glancesql.minisoft.bd/#truncate"},
+          {"@type":"ListItem","position":27,"name":"COUNT()","url":"https://glancesql.minisoft.bd/#count"},
+          {"@type":"ListItem","position":28,"name":"SUM() & AVG()","url":"https://glancesql.minisoft.bd/#sum-avg"},
+          {"@type":"ListItem","position":29,"name":"MIN() & MAX()","url":"https://glancesql.minisoft.bd/#min-max"},
+          {"@type":"ListItem","position":30,"name":"UPPER() & LOWER()","url":"https://glancesql.minisoft.bd/#upper-lower"},
+          {"@type":"ListItem","position":31,"name":"LENGTH()","url":"https://glancesql.minisoft.bd/#length"},
+          {"@type":"ListItem","position":32,"name":"TRIM Functions","url":"https://glancesql.minisoft.bd/#trim"},
+          {"@type":"ListItem","position":33,"name":"SUBSTRING()","url":"https://glancesql.minisoft.bd/#substring"},
+          {"@type":"ListItem","position":34,"name":"REPLACE()","url":"https://glancesql.minisoft.bd/#replace"},
+          {"@type":"ListItem","position":35,"name":"CONCAT()","url":"https://glancesql.minisoft.bd/#concat"},
+          {"@type":"ListItem","position":36,"name":"COALESCE()","url":"https://glancesql.minisoft.bd/#coalesce"},
+          {"@type":"ListItem","position":37,"name":"NULLIF()","url":"https://glancesql.minisoft.bd/#nullif"},
+          {"@type":"ListItem","position":38,"name":"CAST() & CONVERT()","url":"https://glancesql.minisoft.bd/#cast-convert"},
+          {"@type":"ListItem","position":39,"name":"ROUND(), CEIL(), FLOOR()","url":"https://glancesql.minisoft.bd/#round-ceil-floor"},
+          {"@type":"ListItem","position":40,"name":"ABS()","url":"https://glancesql.minisoft.bd/#abs"},
+          {"@type":"ListItem","position":41,"name":"Date & Time Functions","url":"https://glancesql.minisoft.bd/#date-functions"},
+          {"@type":"ListItem","position":42,"name":"GROUP BY","url":"https://glancesql.minisoft.bd/#group-by"},
+          {"@type":"ListItem","position":43,"name":"HAVING Clause","url":"https://glancesql.minisoft.bd/#having"},
+          {"@type":"ListItem","position":44,"name":"GROUPING SETS","url":"https://glancesql.minisoft.bd/#grouping-sets"},
+          {"@type":"ListItem","position":45,"name":"ROLLUP","url":"https://glancesql.minisoft.bd/#rollup"},
+          {"@type":"ListItem","position":46,"name":"CUBE","url":"https://glancesql.minisoft.bd/#cube"},
+          {"@type":"ListItem","position":47,"name":"INNER JOIN","url":"https://glancesql.minisoft.bd/#inner-join"},
+          {"@type":"ListItem","position":48,"name":"LEFT JOIN","url":"https://glancesql.minisoft.bd/#left-join"},
+          {"@type":"ListItem","position":49,"name":"RIGHT JOIN","url":"https://glancesql.minisoft.bd/#right-join"},
+          {"@type":"ListItem","position":50,"name":"FULL OUTER JOIN","url":"https://glancesql.minisoft.bd/#full-join"},
+          {"@type":"ListItem","position":51,"name":"CROSS JOIN","url":"https://glancesql.minisoft.bd/#cross-join"},
+          {"@type":"ListItem","position":52,"name":"NATURAL JOIN","url":"https://glancesql.minisoft.bd/#natural-join"},
+          {"@type":"ListItem","position":53,"name":"Self-Join","url":"https://glancesql.minisoft.bd/#self-join"},
+          {"@type":"ListItem","position":54,"name":"Non-Equi Joins","url":"https://glancesql.minisoft.bd/#non-equi-join"},
+          {"@type":"ListItem","position":55,"name":"UNION & UNION ALL","url":"https://glancesql.minisoft.bd/#union"},
+          {"@type":"ListItem","position":56,"name":"INTERSECT","url":"https://glancesql.minisoft.bd/#intersect"},
+          {"@type":"ListItem","position":57,"name":"EXCEPT / MINUS","url":"https://glancesql.minisoft.bd/#except-minus"},
+          {"@type":"ListItem","position":58,"name":"Scalar Subquery","url":"https://glancesql.minisoft.bd/#scalar-subquery"},
+          {"@type":"ListItem","position":59,"name":"Row Subquery","url":"https://glancesql.minisoft.bd/#row-subquery"},
+          {"@type":"ListItem","position":60,"name":"Table Subquery (Derived)","url":"https://glancesql.minisoft.bd/#table-subquery"},
+          {"@type":"ListItem","position":61,"name":"Correlated Subquery","url":"https://glancesql.minisoft.bd/#correlated-subquery"},
+          {"@type":"ListItem","position":62,"name":"EXISTS / NOT EXISTS","url":"https://glancesql.minisoft.bd/#exists"},
+          {"@type":"ListItem","position":63,"name":"ANY / ALL","url":"https://glancesql.minisoft.bd/#any-all"},
+          {"@type":"ListItem","position":64,"name":"CREATE TABLE","url":"https://glancesql.minisoft.bd/#create-table"},
+          {"@type":"ListItem","position":65,"name":"ALTER TABLE","url":"https://glancesql.minisoft.bd/#alter-table"},
+          {"@type":"ListItem","position":66,"name":"DROP TABLE","url":"https://glancesql.minisoft.bd/#drop-table"},
+          {"@type":"ListItem","position":67,"name":"NOT NULL Constraint","url":"https://glancesql.minisoft.bd/#not-null"},
+          {"@type":"ListItem","position":68,"name":"UNIQUE Constraint","url":"https://glancesql.minisoft.bd/#unique-constraint"},
+          {"@type":"ListItem","position":69,"name":"PRIMARY KEY","url":"https://glancesql.minisoft.bd/#primary-key"},
+          {"@type":"ListItem","position":70,"name":"FOREIGN KEY","url":"https://glancesql.minisoft.bd/#foreign-key"},
+          {"@type":"ListItem","position":71,"name":"CHECK Constraint","url":"https://glancesql.minisoft.bd/#check-constraint"},
+          {"@type":"ListItem","position":72,"name":"DEFAULT Constraint","url":"https://glancesql.minisoft.bd/#default-constraint"},
+          {"@type":"ListItem","position":73,"name":"CREATE / DROP INDEX","url":"https://glancesql.minisoft.bd/#indexes"},
+          {"@type":"ListItem","position":74,"name":"CREATE / DROP VIEW","url":"https://glancesql.minisoft.bd/#views"},
+          {"@type":"ListItem","position":75,"name":"Sequences & Auto-Increment","url":"https://glancesql.minisoft.bd/#sequences"},
+          {"@type":"ListItem","position":76,"name":"Temporary Tables","url":"https://glancesql.minisoft.bd/#temp-tables"},
+          {"@type":"ListItem","position":77,"name":"Common Table Expressions (CTE)","url":"https://glancesql.minisoft.bd/#cte"},
+          {"@type":"ListItem","position":78,"name":"Recursive CTE","url":"https://glancesql.minisoft.bd/#recursive-cte"},
+          {"@type":"ListItem","position":79,"name":"ROW_NUMBER(), RANK()","url":"https://glancesql.minisoft.bd/#window-row-number"},
+          {"@type":"ListItem","position":80,"name":"LEAD() & LAG()","url":"https://glancesql.minisoft.bd/#window-lead-lag"},
+          {"@type":"ListItem","position":81,"name":"Window Frame Clauses","url":"https://glancesql.minisoft.bd/#window-frames"},
+          {"@type":"ListItem","position":82,"name":"FIRST_VALUE / LAST_VALUE","url":"https://glancesql.minisoft.bd/#window-first-last"},
+          {"@type":"ListItem","position":83,"name":"PIVOT / UNPIVOT","url":"https://glancesql.minisoft.bd/#pivot-unpivot"},
+          {"@type":"ListItem","position":84,"name":"MERGE / UPSERT","url":"https://glancesql.minisoft.bd/#merge-upsert"},
+          {"@type":"ListItem","position":85,"name":"LATERAL / APPLY","url":"https://glancesql.minisoft.bd/#lateral-apply"},
+          {"@type":"ListItem","position":86,"name":"STRING_AGG / LISTAGG","url":"https://glancesql.minisoft.bd/#string-aggregation"},
+          {"@type":"ListItem","position":87,"name":"JSON in SQL","url":"https://glancesql.minisoft.bd/#json-functions"},
+          {"@type":"ListItem","position":88,"name":"Full-Text Search","url":"https://glancesql.minisoft.bd/#full-text-search"},
+          {"@type":"ListItem","position":89,"name":"Spatial Data & GIS","url":"https://glancesql.minisoft.bd/#spatial-data"},
+          {"@type":"ListItem","position":90,"name":"Gaps & Islands Problems","url":"https://glancesql.minisoft.bd/#gaps-islands"},
+          {"@type":"ListItem","position":91,"name":"Running Totals & Moving Avg","url":"https://glancesql.minisoft.bd/#running-totals"},
+          {"@type":"ListItem","position":92,"name":"BEGIN, COMMIT, ROLLBACK","url":"https://glancesql.minisoft.bd/#begin-commit-rollback"},
+          {"@type":"ListItem","position":93,"name":"SAVEPOINT","url":"https://glancesql.minisoft.bd/#savepoint"},
+          {"@type":"ListItem","position":94,"name":"Transaction Isolation Levels","url":"https://glancesql.minisoft.bd/#isolation-levels"},
+          {"@type":"ListItem","position":95,"name":"LOCK TABLE","url":"https://glancesql.minisoft.bd/#lock-table"},
+          {"@type":"ListItem","position":96,"name":"Deadlocks","url":"https://glancesql.minisoft.bd/#deadlocks"},
+          {"@type":"ListItem","position":97,"name":"Stored Procedures","url":"https://glancesql.minisoft.bd/#stored-procedures"},
+          {"@type":"ListItem","position":98,"name":"User-Defined Functions","url":"https://glancesql.minisoft.bd/#user-functions"},
+          {"@type":"ListItem","position":99,"name":"Triggers","url":"https://glancesql.minisoft.bd/#triggers"},
+          {"@type":"ListItem","position":100,"name":"Cursors","url":"https://glancesql.minisoft.bd/#cursors"},
+          {"@type":"ListItem","position":101,"name":"Dynamic SQL","url":"https://glancesql.minisoft.bd/#dynamic-sql"},
+          {"@type":"ListItem","position":102,"name":"EXPLAIN / Execution Plans","url":"https://glancesql.minisoft.bd/#explain-plan"},
+          {"@type":"ListItem","position":103,"name":"Query Optimization","url":"https://glancesql.minisoft.bd/#query-optimization"},
+          {"@type":"ListItem","position":104,"name":"Indexing Strategies","url":"https://glancesql.minisoft.bd/#indexing-strategies"},
+          {"@type":"ListItem","position":105,"name":"Index Maintenance","url":"https://glancesql.minisoft.bd/#index-maintenance"},
+          {"@type":"ListItem","position":106,"name":"Table Partitioning","url":"https://glancesql.minisoft.bd/#partitioning"},
+          {"@type":"ListItem","position":107,"name":"Query Hints","url":"https://glancesql.minisoft.bd/#query-hints"},
+          {"@type":"ListItem","position":108,"name":"Cost-Based vs Rule-Based","url":"https://glancesql.minisoft.bd/#optimizer-basics"},
+          {"@type":"ListItem","position":109,"name":"1NF — First Normal Form","url":"https://glancesql.minisoft.bd/#normalization-1nf"},
+          {"@type":"ListItem","position":110,"name":"2NF — Second Normal Form","url":"https://glancesql.minisoft.bd/#normalization-2nf"},
+          {"@type":"ListItem","position":111,"name":"3NF — Third Normal Form","url":"https://glancesql.minisoft.bd/#normalization-3nf"},
+          {"@type":"ListItem","position":112,"name":"BCNF — Boyce-Codd","url":"https://glancesql.minisoft.bd/#bcnf"},
+          {"@type":"ListItem","position":113,"name":"Denormalization","url":"https://glancesql.minisoft.bd/#denormalization"},
+          {"@type":"ListItem","position":114,"name":"Entity-Relationship Modeling","url":"https://glancesql.minisoft.bd/#erd-modeling"},
+          {"@type":"ListItem","position":115,"name":"Referential Integrity","url":"https://glancesql.minisoft.bd/#referential-integrity"},
+          {"@type":"ListItem","position":116,"name":"Database Sharding","url":"https://glancesql.minisoft.bd/#sharding"},
+          {"@type":"ListItem","position":117,"name":"Replication","url":"https://glancesql.minisoft.bd/#replication"},
+          {"@type":"ListItem","position":118,"name":"ACID vs BASE","url":"https://glancesql.minisoft.bd/#acid-vs-base"},
+          {"@type":"ListItem","position":119,"name":"CAP Theorem","url":"https://glancesql.minisoft.bd/#cap-theorem"},
+          {"@type":"ListItem","position":120,"name":"MySQL Features","url":"https://glancesql.minisoft.bd/#mysql-specific"},
+          {"@type":"ListItem","position":121,"name":"PostgreSQL Features","url":"https://glancesql.minisoft.bd/#postgres-specific"},
+          {"@type":"ListItem","position":122,"name":"SQL Server Features","url":"https://glancesql.minisoft.bd/#sqlserver-specific"},
+          {"@type":"ListItem","position":123,"name":"SQLite Features","url":"https://glancesql.minisoft.bd/#sqlite-specific"},
+          {"@type":"ListItem","position":124,"name":"Oracle Features","url":"https://glancesql.minisoft.bd/#oracle-specific"},
+          {"@type":"ListItem","position":125,"name":"ANSI SQL Standards History","url":"https://glancesql.minisoft.bd/#ansi-sql-standards"},
+          {"@type":"ListItem","position":126,"name":"SQL Injection Prevention","url":"https://glancesql.minisoft.bd/#sql-injection"},
+          {"@type":"ListItem","position":127,"name":"N+1 Query Problem","url":"https://glancesql.minisoft.bd/#n-plus-one"},
+          {"@type":"ListItem","position":128,"name":"Cartesian Explosions","url":"https://glancesql.minisoft.bd/#cartesian-explosion"},
+          {"@type":"ListItem","position":129,"name":"Halloween Problem","url":"https://glancesql.minisoft.bd/#halloween-problem"},
+          {"@type":"ListItem","position":130,"name":"Implicit vs Explicit Joins","url":"https://glancesql.minisoft.bd/#implicit-vs-explicit"},
+          {"@type":"ListItem","position":131,"name":"Index Bloat & Maintenance","url":"https://glancesql.minisoft.bd/#index-bloat"}
+        ]
+      }
+    ]
+  }
+  </script>
 
   <!-- Tailwind CSS (CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlanceSQL OG Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
+      font-family: 'Inter', system-ui, sans-serif;
+      position: relative;
+    }
+    /* grid overlay */
+    .grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(148,163,184,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148,163,184,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    /* watermark */
+    .watermark {
+      position: absolute;
+      bottom: 80px;
+      right: -20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 36px;
+      font-weight: 600;
+      color: #06b6d4;
+      opacity: 0.06;
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+      user-select: none;
+      pointer-events: none;
+    }
+    .watermark span {
+      display: block;
+      text-align: right;
+    }
+    .watermark span + span {
+      margin-top: 8px;
+      opacity: 0.5;
+    }
+    /* accent decorative bar */
+    .accent-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: linear-gradient(180deg, #06b6d4 0%, #0891b2 100%);
+      box-shadow: 0 0 20px rgba(6,182,212,0.3);
+    }
+    /* main content */
+    .content {
+      position: relative;
+      z-index: 1;
+      padding: 70px 80px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #fff;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      box-shadow: 0 4px 16px rgba(6,182,212,0.25);
+    }
+    .logo-text {
+      font-size: 48px;
+      font-weight: 800;
+      color: #f1f5f9;
+      letter-spacing: -1.5px;
+    }
+    .logo-text .accent {
+      color: #06b6d4;
+    }
+    .tagline {
+      font-size: 22px;
+      font-weight: 400;
+      color: #94a3b8;
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 48px;
+    }
+    .tagline strong {
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+    .meta-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: rgba(6,182,212,0.1);
+      border: 1px solid rgba(6,182,212,0.2);
+      color: #06b6d4;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .badge dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #06b6d4;
+      display: inline-block;
+    }
+    .meta-text {
+      font-size: 15px;
+      color: #64748b;
+      font-weight: 400;
+    }
+    .footer-code {
+      position: absolute;
+      bottom: 30px;
+      right: 40px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: rgba(148,163,184,0.25);
+      z-index: 1;
+      user-select: none;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="accent-bar"></div>
+
+  <div class="watermark">
+    <span>SELECT * FROM sql_knowledge</span>
+    <span>WHERE topic IN ('joins','indexes','cte')</span>
+  </div>
+
+  <div class="content">
+    <div class="logo-row">
+      <div class="icon-box">SQL</div>
+      <div class="logo-text"><span class="accent">Glance</span>SQL</div>
+    </div>
+
+    <div class="tagline">
+      Master SQL in <strong>One Glance</strong> &mdash;<br />
+      <strong>131 topics</strong>, zero setup, one page
+    </div>
+
+    <div class="meta-row">
+      <span class="badge"><dot></dot> Interactive Learning</span>
+      <span class="meta-text">18 categories &middot; beginner to advanced</span>
+    </div>
+  </div>
+
+  <div class="footer-code">;-- learn more at glancesql.dev</div>
+</body>
+</html>
