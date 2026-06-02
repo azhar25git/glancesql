@@ -1,6 +1,7 @@
 # GlanceSQL
 
 > **Master SQL in One Glance** — 131 topics, zero setup, one page.
+> **Visit: https://glancesql.minisoft.bd/**
 
 GlanceSQL is a single-file interactive SQL learning website. No build step, no backend, no database — just open it in a browser and start learning. Every SQL concept from `SELECT` to the CAP theorem, explained with simple analogies, executable examples, and visual data tables.
 
@@ -53,23 +54,6 @@ GlanceSQL is a single-file interactive SQL learning website. No build step, no b
 | **Syntax Highlighting** | All code blocks rendered with Prism.js for clarity |
 | **Keyboard Navigation** | Arrow keys to move between topics, Escape to close sidebar |
 | **Fully Responsive** | Sidebar collapses on mobile, content scales to any screen |
-
----
-
-## Quick Start
-
-```bash
-# Clone the repo
-git clone https://github.com/yourusername/glancesql.git
-cd glancesql
-
-# Serve with any HTTP server (required for some browsers)
-python3 -m http.server 8080
-
-# Open http://localhost:8080 and start learning
-```
-
-> **Note:** Some browsers restrict module loading and worker scripts on `file://` URLs. Using `http.server` (or any local server) ensures the full experience works.
 
 ---
 
