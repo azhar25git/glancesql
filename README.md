@@ -1,6 +1,6 @@
 # GlanceSQL
 
-> **Master SQL in One Glance** — 131 topics, zero setup, one page.
+> **Master SQL in One Glance** — 131 topics, zero setup, one page.  
 > **Visit: https://glancesql.minisoft.bd/**
 
 GlanceSQL is a single-file interactive SQL learning website. No build step, no backend, no database — just open it in a browser and start learning. Every SQL concept from `SELECT` to the CAP theorem, explained with simple analogies, executable examples, and visual data tables.
